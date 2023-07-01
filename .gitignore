@@ -1,0 +1,7 @@
+*.csv
+.DS_Store
+.ipynb_checkpoints/
+__pycache__
+*.xlsx
+env.py
+telco_churn_data.csv

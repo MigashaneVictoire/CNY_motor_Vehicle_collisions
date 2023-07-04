@@ -172,7 +172,7 @@ def get_vehicle_data_no_dummies() -> pd.DataFrame:
                 "number_of_pedestrians_killed",
                 "number_of_cyclist_killed",
                 "number_of_motorist_killed"]
-    vehicle = prepare_.drop_cols(vehicle, remove_cols)    
+    vehicle = drop_cols(vehicle, remove_cols)    
 
     return vehicle
 
@@ -316,7 +316,7 @@ def get_vehicle_data_with_dummies() -> pd.DataFrame:
                 "number_of_pedestrians_killed",
                 "number_of_cyclist_killed",
                 "number_of_motorist_killed"]
-    vehicle = prepare_.drop_cols(vehicle, remove_cols)
+    vehicle = drop_cols(vehicle, remove_cols)
 
     # get all columns from dataframe
     all_columns = vehicle.columns

@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+import os
 
 # Personal libraries
 import acquire_
@@ -147,6 +148,74 @@ def get_vehicle_data_no_dummies() -> pd.DataFrame:
             vehicle["contributing_factor_vehicle_3"] = vehicle["contributing_factor_vehicle_3"].apply(lambda x: k if x == ele else x)
             vehicle["contributing_factor_vehicle_4"] = vehicle["contributing_factor_vehicle_4"].apply(lambda x: k if x == ele else x)
             vehicle["contributing_factor_vehicle_5"] = vehicle["contributing_factor_vehicle_5"].apply(lambda x: k if x == ele else x)
+   
+   # Group the categories
+    vehicle_categories = {
+        'SEDAN': ['Sedan', '4 dr sedan', '2 dr sedan', '3-Door'],
+        'STATION_WAGON': ['Station Wagon/Sport Utility Vehicle', 'SPORT UTILITY / STATION WAGON'],
+        'PASSENGER_VEHICLE': ['PASSENGER VEHICLE'],
+        'TAXI': ['Taxi', 'TAXI'],
+        'PICKUP_TRUCK': ['Pick-up Truck', 'PICK-UP TRUCK', 'PK', 'Pickup with mounted Camper', 'pick'],
+        'UNKNOWN': ['UNKNOWN', 'UNKNO', 'UNK','unknown', 'unko', 'unk'],
+        'VAN': ['VAN', 'van', 'Van', 'Van Camper'],
+        'BOX_TRUCK': ['Box Truck', 'BOX T', 'BOX TRUCK'],
+        'BUS': ['Bus', 'BUS', 'School Bus'],
+        'LARGE_COM_VEH': ['LARGE COM VEH(6 OR MORE TIRES)'],
+        'SMALL_COM_VEH': ['SMALL COM VEH(4 TIRES)', 'COMME'],
+        'LIVERY_VEHICLE': ['LIVERY VEHICLE'],
+        'TRACTOR_TRUCK_DIESEL': ['Tractor Truck Diesel', 'TRACT'],
+        'MOTORCYCLE': ['Bike', 'MOTORCYCLE', 'Motorscooter', 'Moped', 'Minibike', 'Minicycle'],
+        'AMBULANCE': ['Ambulance', 'AMBULANCE', 'AMBUL', 'ambul', 'AMB', 'FDNY AMBUL', 'fdny'],
+        'CONVERTIBLE': ['Convertible'],
+        'DUMP': ['Dump', 'dump'],
+        'E_BIKE': ['E-Bike', 'E-Bik', 'ELECT'],
+        'FLAT_BED': ['Flat Bed', 'FLAT'],
+        'GARBAGE_OR_REFUSE': ['Garbage or Refuse'],
+        'CARRY_ALL': ['Carry All'],
+        'E_SCOOTER': ['E-Scooter', 'E-Sco'],
+        'TRACTOR_TRUCK_GASOLINE': ['Tractor Truck Gasoline', 'FORD'],
+        'TOW_TRUCK': ['Tow Truck / Wrecker', 'Tow Truck', 'TOW T'],
+        'FIRE_TRUCK': ['FIRE TRUCK', 'FIRET', 'Fire Truck', 'fire', 'FDNY FIRE', 'FDNY TRUCK', 'FDNY'],
+        'CHASSIS_CAB': ['Chassis Cab'],
+        'TANKER': ['Tanker', 'TANK'],
+        'REFRIGERATED_VAN': ['Refrigerated Van'],
+        'CONCRETE_MIXER': ['Concrete Mixer'],
+        'FLAT_RACK': ['Flat Rack'],
+        'ARMORED_TRUCK': ['Armored Truck'],
+        'BEVERAGE_TRUCK': ['Beverage Truck'],
+        'SCOOTER': ['SCOOTER', 'SCOOT'],
+        'LIMO': ['LIMO'],
+        'LIFT_BOOM': ['Lift Boom'],
+        'TRUCK': ['TRUCK', 'truck'],
+        'TRAILER': ['TRAIL', 'trail', 'TRAILER'],
+        'STAKE_OR_RACK': ['Stake or Rack'],
+        'LUNCH_WAGON': ['Lunch Wagon'],
+        'FORKLIFT': ['FORKL'],
+        'MOTORIZED_HOME': ['Motorized Home'],
+        'PEDICAB': ['Pedicab'],
+        'HOPPER': ['Hopper'],
+        'MULTI_WHEELED_VEHICLE': ['Multi-Wheeled Vehicle'],
+        'USPS': ['USPS'],
+        'DELIVERY': ['DELIV', 'DELV'],
+        'UTILITY': ['UTILI', 'UTIL'],
+        'OPEN_BODY': ['Open Body'],
+        'BULK_AGRICULTURE': ['Bulk Agriculture']
+    }
+    
+
+    # Replacing values in the "vehicle_type_code_1" column based on the categories
+    def replace_category(value):
+        for category, codes in vehicle_categories.items():
+            if value in codes:
+                return category
+        return 'OTHER'
+
+    # apply the created function to the data
+    vehicle["vehicle_type_code_1"] = vehicle["vehicle_type_code_1"].apply(replace_category)
+    vehicle["vehicle_type_code_2"] = vehicle["vehicle_type_code_2"].apply(replace_category)
+    vehicle["vehicle_type_code_3"] = vehicle["vehicle_type_code_3"].apply(replace_category)
+    vehicle["vehicle_type_code_4"] = vehicle["vehicle_type_code_4"].apply(replace_category)
+    vehicle["vehicle_type_code_5"] = vehicle["vehicle_type_code_5"].apply(replace_category)
 
     # if any fatalities are found add 1 in the list
     fatalities = []
@@ -180,7 +249,7 @@ def get_vehicle_data_no_dummies() -> pd.DataFrame:
 # get data with dummies
 def get_vehicle_data_with_dummies() -> pd.DataFrame:
     """
-    return prepared vehicle data that does contain dummie variables
+    return prepared training data that does contain dummie variables
     """
     # get data from acquire file
     vehicle = acquire_.get_data()
@@ -292,6 +361,75 @@ def get_vehicle_data_with_dummies() -> pd.DataFrame:
             vehicle["contributing_factor_vehicle_4"] = vehicle["contributing_factor_vehicle_4"].apply(lambda x: k if x == ele else x)
             vehicle["contributing_factor_vehicle_5"] = vehicle["contributing_factor_vehicle_5"].apply(lambda x: k if x == ele else x)
 
+    # Group the categories
+    vehicle_categories = {
+        'SEDAN': ['Sedan', '4 dr sedan', '2 dr sedan', '3-Door'],
+        'STATION_WAGON': ['Station Wagon/Sport Utility Vehicle', 'SPORT UTILITY / STATION WAGON'],
+        'PASSENGER_VEHICLE': ['PASSENGER VEHICLE'],
+        'TAXI': ['Taxi', 'TAXI'],
+        'PICKUP_TRUCK': ['Pick-up Truck', 'PICK-UP TRUCK', 'PK', 'Pickup with mounted Camper', 'pick'],
+        'UNKNOWN': ['UNKNOWN', 'UNKNO', 'UNK','unknown', 'unko', 'unk'],
+        'VAN': ['VAN', 'van', 'Van', 'Van Camper'],
+        'BOX_TRUCK': ['Box Truck', 'BOX T', 'BOX TRUCK'],
+        'BUS': ['Bus', 'BUS', 'School Bus'],
+        'LARGE_COM_VEH': ['LARGE COM VEH(6 OR MORE TIRES)'],
+        'SMALL_COM_VEH': ['SMALL COM VEH(4 TIRES)', 'COMME'],
+        'LIVERY_VEHICLE': ['LIVERY VEHICLE'],
+        'TRACTOR_TRUCK_DIESEL': ['Tractor Truck Diesel', 'TRACT'],
+        'MOTORCYCLE': ['Bike', 'MOTORCYCLE', 'Motorscooter', 'Moped', 'Minibike', 'Minicycle'],
+        'AMBULANCE': ['Ambulance', 'AMBULANCE', 'AMBUL', 'ambul', 'AMB', 'FDNY AMBUL', 'fdny'],
+        'CONVERTIBLE': ['Convertible'],
+        'DUMP': ['Dump', 'dump'],
+        'E_BIKE': ['E-Bike', 'E-Bik', 'ELECT'],
+        'FLAT_BED': ['Flat Bed', 'FLAT'],
+        'GARBAGE_OR_REFUSE': ['Garbage or Refuse'],
+        'CARRY_ALL': ['Carry All'],
+        'E_SCOOTER': ['E-Scooter', 'E-Sco'],
+        'TRACTOR_TRUCK_GASOLINE': ['Tractor Truck Gasoline', 'FORD'],
+        'TOW_TRUCK': ['Tow Truck / Wrecker', 'Tow Truck', 'TOW T'],
+        'FIRE_TRUCK': ['FIRE TRUCK', 'FIRET', 'Fire Truck', 'fire', 'FDNY FIRE', 'FDNY TRUCK', 'FDNY'],
+        'CHASSIS_CAB': ['Chassis Cab'],
+        'TANKER': ['Tanker', 'TANK'],
+        'REFRIGERATED_VAN': ['Refrigerated Van'],
+        'CONCRETE_MIXER': ['Concrete Mixer'],
+        'FLAT_RACK': ['Flat Rack'],
+        'ARMORED_TRUCK': ['Armored Truck'],
+        'BEVERAGE_TRUCK': ['Beverage Truck'],
+        'SCOOTER': ['SCOOTER', 'SCOOT'],
+        'LIMO': ['LIMO'],
+        'LIFT_BOOM': ['Lift Boom'],
+        'TRUCK': ['TRUCK', 'truck'],
+        'TRAILER': ['TRAIL', 'trail', 'TRAILER'],
+        'STAKE_OR_RACK': ['Stake or Rack'],
+        'LUNCH_WAGON': ['Lunch Wagon'],
+        'FORKLIFT': ['FORKL'],
+        'MOTORIZED_HOME': ['Motorized Home'],
+        'PEDICAB': ['Pedicab'],
+        'HOPPER': ['Hopper'],
+        'MULTI_WHEELED_VEHICLE': ['Multi-Wheeled Vehicle'],
+        'USPS': ['USPS'],
+        'DELIVERY': ['DELIV', 'DELV'],
+        'UTILITY': ['UTILI', 'UTIL'],
+        'OPEN_BODY': ['Open Body'],
+        'BULK_AGRICULTURE': ['Bulk Agriculture']
+    }
+        
+
+    # Replacing values in the "vehicle_type_code_1" column based on the categories
+    def replace_category(value):
+        for category, codes in vehicle_categories.items():
+            if value in codes:
+                return category
+        return 'OTHER'
+
+    # apply the created function to the data
+    vehicle["vehicle_type_code_1"] = vehicle["vehicle_type_code_1"].apply(replace_category)
+    vehicle["vehicle_type_code_2"] = vehicle["vehicle_type_code_2"].apply(replace_category)
+    vehicle["vehicle_type_code_3"] = vehicle["vehicle_type_code_3"].apply(replace_category)
+    vehicle["vehicle_type_code_4"] = vehicle["vehicle_type_code_4"].apply(replace_category)
+    vehicle["vehicle_type_code_5"] = vehicle["vehicle_type_code_5"].apply(replace_category)
+
+
     # if any fatalities are found add 1 in the list
     fatalities = []
     for row in range(len(vehicle)):
@@ -343,7 +481,61 @@ def get_vehicle_data_with_dummies() -> pd.DataFrame:
     # add dummies to the dataset
     vehicle[dummies.columns] = dummies
 
-    return vehicle
+    train, validate, test = split_data_(df= vehicle, 
+                                        test_size=0.2, # 20% in the test set
+                                        random_state=95,
+                                        stratify_col = "fatality")
+    
+    # using the function to same the files
+    save_split_data(vehicle, train, validate, test)
+
+    return train
+
+
+# -----------------------------------------------------------------
+# Save the splited data into separate csv files
+def save_split_data(encoded_df: pd.DataFrame, train:pd.DataFrame, validate:pd.DataFrame, test:pd.DataFrame, folder_path: str = "./project_data") -> str:
+    """
+    parameters:
+        encoded_df: full project dataframe that contains the (encoded columns or scalling)
+        train: training data set that has been split from the original
+        validate: validation data set that has been split from the original
+        test: testing data set that has been split from the original
+        folder_path: folder path where to save the data sets
+    return:
+        string to show succes of saving the data
+    """
+    # create new folder if folder don't aready exist
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        # save the dataframe with dummies in a csv for easy access
+        encoded_df.to_csv(f"./{folder_path}/encoded_data.csv", mode="w")
+
+        # save training data
+        train.to_csv(f"./{folder_path}/training_data.csv", mode="w")
+
+        # save validate
+        validate.to_csv(f"./{folder_path}/validation_data.csv", mode="w")
+
+        # Save test
+        test.to_csv(f"./{folder_path}/testing_data.csv", mode="w")
+
+    else:
+        # save the dataframe with dummies in a csv for easy access
+        encoded_df.to_csv(f"./{folder_path}/encoded_data.csv", mode="w")
+
+        # save training data
+        train.to_csv(f"./{folder_path}/training_data.csv", mode="w")
+
+        # save validate
+        validate.to_csv(f"./{folder_path}/validation_data.csv", mode="w")
+
+        # Save test
+        test.to_csv(f"./{folder_path}/testing_data.csv", mode="w")
+
+    return "Four data sets saved as .csv"
+
+
 
 # -----------------------------------------------------------------
 # Split the data into train, validate and train

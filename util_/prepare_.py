@@ -573,8 +573,8 @@ def save_visuals_(fig: plt.figure ,viz_name:str= "unamed_viz", folder_name:int= 
 ##########################################################################################
 # Save the splited data into separate csv files
 ##########################################################################################
-def save_split_data_(original_df:pd.DataFrame,encoded_scaled_df: pd.DataFrame, train:pd.DataFrame, validate:pd.DataFrame, test:pd.DataFrame, folder_path: str = "./00_project_data",
-                     test_size:float = 0.2,stratify_col:str=None, random_state: int=95 ) -> str:
+def save_split_data_(encoded_scaled_df: pd.DataFrame, train:pd.DataFrame, validate:pd.DataFrame, test:pd.DataFrame, folder_path: str = "./00_project_data",
+                     original_df:pd.DataFrame=None, test_size:float = 0.2,stratify_col:str=None, random_state: int=95 ) -> str:
     """
     parameters:
         encoded_df: full project dataframe that contains the (encoded columns or scalling)
@@ -589,50 +589,84 @@ def save_split_data_(original_df:pd.DataFrame,encoded_scaled_df: pd.DataFrame, t
         string to show succes of saving the data
     """
     # split original clearn no dumies data frame
-    org_train_df, org_val_df, org_test_df = split_data_(df=original_df, test_size=test_size, stratify_col=stratify_col, random_state=random_state)
+
+    if original_df is not None:
+        org_train_df, org_val_df, org_test_df = split_data_(df=original_df, test_size=test_size, stratify_col=stratify_col, random_state=random_state)
 
 
-    # create new folder if folder don't aready exist
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
-        # save the dataframe with dummies in a csv for easy access
-        original_df.to_csv(f"./{folder_path}/00_original_clean_no_dummies.csv", mode="w")
+        # create new folder if folder don't aready exist
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            # save the dataframe with dummies in a csv for easy access
+            original_df.to_csv(f"./{folder_path}/00_original_clean_no_dummies.csv", mode="w")
 
-        # save the dataframe with dummies in a csv for easy access
-        org_train_df.to_csv(f"./{folder_path}/01_original_clean_no_dummies_train.csv", mode="w")
+            # save the dataframe with dummies in a csv for easy access
+            org_train_df.to_csv(f"./{folder_path}/01_original_clean_no_dummies_train.csv", mode="w")
 
-        # save the dataframe with dummies in a csv for easy access
-        encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
+            # save the dataframe with dummies in a csv for easy access
+            encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
 
-        # save training data
-        train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
+            # save training data
+            train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
 
-        # save validate
-        validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
+            # save validate
+            validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
 
-        # Save test
-        test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
+            # Save test
+            test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
 
-    else:
-        # save the dataframe with dummies in a csv for easy access
-        original_df.to_csv(f"./{folder_path}/00_original_clean_no_dummies.csv", mode="w")
+        else:
+            # save the dataframe with dummies in a csv for easy access
+            original_df.to_csv(f"./{folder_path}/00_original_clean_no_dummies.csv", mode="w")
 
-        # save the dataframe with dummies in a csv for easy access
-        org_train_df.to_csv(f"./{folder_path}/01_original_clean_no_dummies_train.csv", mode="w")
+            # save the dataframe with dummies in a csv for easy access
+            org_train_df.to_csv(f"./{folder_path}/01_original_clean_no_dummies_train.csv", mode="w")
 
-        # save the dataframe with dummies in a csv for easy access
-        encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
+            # save the dataframe with dummies in a csv for easy access
+            encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
 
-        # save training data
-        train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
+            # save training data
+            train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
 
-        # save validate
-        validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
+            # save validate
+            validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
 
-        # Save test
-        test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
+            # Save test
+            test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
 
-    return "SIX data sets saved as .csv"
+        return "SIX data sets saved as .csv"
+    elif original_df is None:
+        # create new folder if folder don't aready exist
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+            # save the dataframe with dummies in a csv for easy access
+            encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
+
+            # save training data
+            train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
+
+            # save validate
+            validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
+
+            # Save test
+            test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
+
+        else:
+
+            # save the dataframe with dummies in a csv for easy access
+            encoded_scaled_df.to_csv(f"./{folder_path}/1-0_encoded_data.csv", mode="w")
+
+            # save training data
+            train.to_csv(f"./{folder_path}/1-1_training_data.csv", mode="w")
+
+            # save validate
+            validate.to_csv(f"./{folder_path}/1-2_validation_data.csv", mode="w")
+
+            # Save test
+            test.to_csv(f"./{folder_path}/1-3_testing_data.csv", mode="w")
+
+        return "FOUR data sets saved as .csv"
 
 ##########################################################################################
 # Split the data into train, validate and train

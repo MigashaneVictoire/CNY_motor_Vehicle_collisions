@@ -1,13 +1,18 @@
+# funtion annotations
+from binascii import a2b_qp
+from typing import Union
+from typing import Tuple
+
 # data manipulation
 import pandas as pd
 import numpy as np
 
 # data visualization
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import seaborn as sns
 # set a default them for all my visuals
-# sns.set_theme(style="whitegrid")
+sns.set_theme(style="whitegrid")
+plt.ioff() # Turn off interactive mode
 
 # modeling
 from sklearn.metrics import accuracy_score
@@ -46,26 +51,105 @@ warnings.filterwarnings("ignore")
 # set the random seed
 np.random.seed(95)
 
-
-def baseline_accuracy(train: pd.DataFrame ):
+#######################################################################################
+################ Baseline accuracy score ----------------------------------------------
+#######################################################################################
+def baseline_accuracy(target:np.array, base_avg_metrics: int= 0) -> float:
     """
-    Goal: establish_baseline accuracy score
+    Goal: establish baseline accuracy score
+    perimeters:
+        target: numpy array representing our target variable.
+        base_avg_metrics: how to evaluate the baseline prediction.
+            -> mode = 0
+            --> median = 1
+    return:
+        baseline accuracy score.
     """
-    # calculate and add bseline to the training data
-    train["baseline_"] = int(ytrain.mode())
+    if base_avg_metrics == 0:
+        # calculate and add bseline to the training data
+        avg_metrics = target.mode()
+    elif base_avg_metrics == 1:
+         # calculate and add bseline to the training data
+        avg_metrics = target.median()
 
     # baseline score
-    baseline =accuracy_score( ytrain, train_scaled.baseline)
-    baseline
-    return
+    baseline =accuracy_score( target, [avg_metrics] * len(target))
+    return round(baseline, 3)
 
-
-def get_knn_():
+#######################################################################################
+################ KNN classification model----------------------------------------------
+#######################################################################################
+# Train KNN model on different k values.
+def get_knn_(xtrain:pd.DataFrame, xval:pd.DataFrame,ytrain:np.array, yval:np.array, iter_percent:float=0.005, base_avg_metrics:int= 0) -> Tuple[pd.DataFrame, plt.plot, plt.plot, str]:
     """
     Goal: Perform full k-nearest neighbor mode and return the resuls
+    perimeters:
+        xtrain/xval: training and validation feature data (pd.DataFrame)
+        ytrain/yval: training and validation target variable (np.array)
+        iter_percent: percentage of the number of max iteration based on the length of training data
+        base_avg_metrics: baseline evaluation method (mode = 0 or median = 1)
+    return:
+        knn_model_df: pandas data frame of all the models performed.
+        plt.gcf(): visual of the knn_model scores
+        matrixDisp: visual matrix distplay
+        cls_report: classification report
     """
-    return
+    # the maximun number of neighbors the model should look at
+    # in my case it can only look at 1% of the data
+    k_neighbors = math.ceil(len(xtrain) * iter_percent)
+    baseline = baseline_accuracy(target=ytrain, base_avg_metrics=base_avg_metrics)
 
+    # the final result metric
+    iter_lst = []
+
+    for k in range(1, k_neighbors + 1):
+        # create a knn object
+        #                          n_neighborsint(default=5) 
+        knn = KNeighborsClassifier(n_neighbors=k, weights='uniform', p=2)
+        #                                                        p=1 uses the manhattan distance
+
+        # Fit training data to the object
+        knn = knn.fit(xtrain, ytrain)
+        
+        # use the object to make predictons
+        ypred_train = knn.predict(xtrain)
+        ypred_val = knn.predict(xval)
+
+        # get the prediction scores
+        train_score = knn.score(xtrain, ytrain)
+        validate_score = knn.score(xval, yval)
+        
+        # create a dictionary of scores
+        one_iteration = {
+            "k": k,
+            "train_score": train_score,
+            "validate_score": validate_score,
+            "train_val_difference": train_score - validate_score,
+            "train_baseline_diff": baseline - train_score,
+            "baseline_accuracy": baseline,
+        }
+        
+        iter_lst.append(one_iteration)
+
+    # create models dataframe
+    knn_model_df = pd.DataFrame(iter_lst)
+
+    #PLOT train vs validate
+    knn_model_df[knn_model_df.columns[:-3]].set_index("k").plot()
+    plt.xticks(np.arange(0,k_neighbors, 2))
+    plt.ylabel('accuracy')
+    plt.xlabel('n_neighbors')
+    plt.title("Train vs Validate Accuracy Scores")
+    plt.grid(visible=True, axis='both')
+
+    # get classification report
+    cls_report = classification_report(ytrain, ypred_train)
+
+    return knn_model_df, cls_report, plt.gcf()
+
+#######################################################################################
+################ KNN classification model----------------------------------------------
+#######################################################################################
 def get_decision_tree_():
     """
     Goal: Perform full k-nearest neighbor mode and return the resuls

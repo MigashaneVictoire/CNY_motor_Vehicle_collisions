@@ -1,233 +1,112 @@
-# <a name="top"></a>README TITLE
-![]()
+<a name="top"></a>
 
-by: Victoire Migashane
+# City of New York Motor Vehicle Collision Analysis
 
-<p>
-  <a href="https://github.com/MigashaneVictoire" target="_blank">
-    <img alt="Victoire" src="https://img.shields.io/github/followers/MigashaneVictoire?label=Follow_Victoire&style=social" />
-  </a>
-</p>
+by Victoire Migashane
 
+## Description
 
-***
-[[Project Description](#project_description)]
-[[Project Planning](#planning)]
-[[Key Findings](#findings)]
-[[Data Dictionary](#dictionary)]
-[[Data Acquire and Prep](#wrangle)]
-[[Data Exploration](#explore)]
-[[Statistical Analysis](#stats)]
-[[Modeling](#model)]
-[[Conclusion](#conclusion)]
-___
+This project aims to analyze motor vehicle collision data in the City of New York to gain insights into traffic accidents. By exploring historical accident data, I intend to help authorities identify high-risk areas, contributing factors, and trends. This information can be used to implement targeted safety measures and interventions, ultimately leading to a reduction in accidents and improved road safety.
 
-<!-- <img src="https://docs.google.com/drawings/d/e/2PACX-1vR19fsVfxHvzjrp0kSMlzHlmyU0oeTTAcnTUT9dNe4wAEXv_2WJNViUa9qzjkvcpvkFeUCyatccINde/pub?w=1389&amp;h=410"> -->
+## Goals
 
-## <a name="project_description"></a>Project Description:
-[[Back to top](#top)]
+The primary objectives of this project were to:
 
-***
-## <a name="planning"></a>Project Planning: 
-[[Back to top](#top)]
+- Create an Interactive Dashboard for Exploring Traffic Accident Data.
 
-### Project Outline:
+## Acquire Data
 
+I acquired the data from [catalog.data.gov](https://catalog.data.gov/dataset/motor-vehicle-collisions-crashes) and performed the following steps:
 
-        
-### Hypothesis
+- The dataset consists of 2,014,469 rows and 29 columns.
+- Out of the 29 columns, 11 are numeric, and 18 are string object columns.
+- Some null values were present in the dataset.
+- I performed descriptive statistics analysis on the data.
 
+## Prepare Data
 
+Data preparation involved the following steps:
 
-### Target variable
+- Renamed all columns by replacing empty spaces with underscores and making them all lowercase.
+- Removed null values in location data (e.g., zipcode, longitude, etc.).
+- Changed column data types:
+    - Converted object columns to datetime: `crash_date` and `crash_time`.
+- Filled all other nulls with "UNKNOWN" for object data types.
+- Grouped similar categories to reduce the size of unique features in columns like `contributing_factor_vehicle` and `vehicle_type_code`.
+- Created a target variable as a binary column using:
+    - `number_of_persons_killed`, `number_of_pedestrians_killed`, `number_of_cyclist_killed`, and `number_of_motorist_killed`.
+- Encoded all categorical columns, resulting in 299 new dummy columns.
+- Split the data into training, validation, and test sets using a 60/20/20 ratio.
 
+## Data Exploration (EDA)
 
-### Need to haves (Deliverables):
+Data was split into training, validation, and test datasets to avoid bias and data leakage during modeling. Additional exploration questions included:
 
+## Explore
 
+- Seasonal trends were found in the number of motorists, cyclists, and personnel injured. However, there wasn't a strong seasonal trend in the number of pedestrians injured and fatalities.
+- Brooklyn had the highest number of collisions (250,000), while Staten Island had the lowest count (about 30,000).
+- Zip code 11207 had the highest number of collisions.
+- The most common contributing factors for crashes were driver distraction, unsafe driving, and vehicle failure.
+- Car (sedan or SUV) and van were the most common vehicle types involved in crashes.
+- The training data showed 967 fatalities.
+- Data indicated a relationship between the number of fatalities and the number of injuries in crashes.
+- Certain vehicle types were more prone to be involved in fatal crashes.
+- There was a large increase in personnel injuries starting in March 2020, along with a significant decrease in vehicle crashes during the same period.
 
-### Nice to haves (With more time):
+You can explore the interactive dashboard for more insights: [City of New York Motor Vehicle Collisions Dashboard](https://public.tableau.com/views/CityofNewYorkMotorVehicleCollisions/injuryboard?:language=en-US&:display_count=n&:origin=viz_share_link)
 
+![Sample Image](attachment:1425f706-a426-42fd-966b-af9a9435f415.png)
 
+## Conclusion
 
-***
+### Summary
 
-## <a name="findings"></a>Key Findings:
-[[Back to top](#top)]
+This project provides valuable insights into motor vehicle collisions in the City of New York. It identifies seasonal trends, high-risk areas, and contributing factors, which can be used to enhance road safety measures.
 
+### Next Steps
 
+In future iterations, I plan to:
 
+- Implement machine learning models to predict accident outcomes.
+- Explore the effectiveness of safety measures and interventions.
+- Continuously update and maintain the dashboard with real-time data.
 
-***
+## Data Dictionary
 
-## <a name="dictionary"></a>Data Dictionary  
-[[Back to top](#top)]
+|Column Name|Description|Data Type|
+|----|----|----|
+|**CRASH DATE**|Occurrence date of collision|Timestamp|
+|**CRASH TIME**|Occurrence time of collision|Text|
+|**BOROUGH**|Borough where collision occurred|Text|
+|**ZIP CODE**|Postal code of incident occurrence|Text|
+|**LATITUDE**|Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)|Number|
+|**LONGITUDE**|Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)|Number|
+|**LOCATION**|Latitude, Longitude pair|Location|
+|**ON STREET NAME**|Street on which the collision occurred|Text|
+|**CROSS STREET NAME**|Nearest cross street to the collision|Text|
+|**OFF STREET NAME**|Street address if known|Text|
+|**NUMBER OF PERSONS INJURED**|Number of persons injured|Number|
+|**NUMBER OF PERSONS KILLED**|Number of persons killed|Number|
+|**NUMBER OF PEDESTRIANS INJURED**| Number of pedestrians injured|Number|
+|**NUMBER OF PEDESTRIANS KILLED**|Number of pedestrians killed|Number|
+|**NUMBER OF CYCLISTS INJURED**|Number of cyclists injured|Number|
+|**NUMBER OF CYCLISTS KILLED**|Number of cyclists killed|Number|
+|**NUMBER OF MOTORISTS INJURED**|Number of vehicle occupants injured|Number|
+|**NUMBER OF MOTORISTS KILLED**|Number of vehicle occupants killed|Number|
+|**CONTRIBUTING FACTOR VEHICLE 1**|Factors contributing to the collision for Vehicle 1|Text|
+|**CONTRIBUTING FACTOR VEHICLE 2**|Factors contributing to the collision for Vehicle 2|Text|
+|**CONTRIBUTING FACTOR VEHICLE 3**|Factors contributing to the collision for Vehicle 3|Text|
+|**CONTRIBUTING FACTOR VEHICLE 4**|Factors contributing to the collision for Vehicle 4|Text|
+|**CONTRIBUTING FACTOR VEHICLE 5**|Factors contributing to the collision for Vehicle 5|Text|
+|**COLLISION_ID**|Unique record code generated by the system. Primary Key for Crash table|Number|
+|**VEHICLE TYPE CODE 1**|Type of vehicle based on the selected vehicle category (ATV, bicycle, car/suv, ebike, escooter, truck/bus, motorcycle, other)|Text|
+|**VEHICLE TYPE CODE 2**|Type of vehicle based on the selected vehicle category (ATV, bicycle, car/suv, ebike, escooter, truck/bus, motorcycle, other)|Text|
+|**VEHICLE TYPE CODE 3**|Type of vehicle based on the selected vehicle category (ATV, bicycle, car/suv, ebike, escooter, truck/bus, motorcycle, other)|Text|
+|**VEHICLE TYPE CODE 4**|Type of vehicle based on the selected vehicle category (ATV, bicycle, car/suv, ebike, escooter, truck/bus, motorcycle, other)|Text|
+|**VEHICLE TYPE CODE 5**|Type of vehicle based on the selected vehicle category (ATV, bicycle, car/suv, ebike, escooter, truck/bus, motorcycle, other)|Text|
 
-### Data Used
----
-| Attribute | Definition | Data Type |
-| ----- | ----- | ----- |
-| | | |
-| | | |
-| | | |
-| | | |
-| | | |
-| | | |
 
-***
+[Back to top](#top)
 
-## <a name="wrangle"></a>Data Acquisition and Preparation
-[[Back to top](#top)]
-
-![]()
-
-
-### Wrangle steps: 
-
-
-*********************
-
-## <a name="explore"></a>Data Exploration:
-[[Back to top](#top)]
-- Python files used for exploration:
-    - wrangle.py 
-    - explore.py
-    - modeling.py
-
-
-### Takeaways from exploration:
-
-
-***
-
-## <a name="stats"></a>Statistical Analysis
-[[Back to top](#top)]
-
-### Stats Test 1: ANOVA Test: One Way
-
-Analysis of variance, or ANOVA, is a statistical method that separates observed variance data into different components to use for additional tests. 
-
-A one-way ANOVA is used for three or more groups of data, to gain information about the relationship between the dependent and independent variables: in this case our clusters vs. the log_error, respectively.
-
-To run the ANOVA test in Python use the following import: \
-<span style="color:green">from</span> scipy.stats <span style="color:green">import</span> f_oneway
-
-- f_oneway, in this case, takes in the individual clusters and returns the f-statistic, f, and the p_value, p:
-    - the f-statistic is simply a ratio of two variances. 
-    - The p_vlaue is the probability of obtaining test results at least as extreme as the results actually observed, under the assumption that the null hypothesis is correct
-
-#### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is
-- The alternate hypothesis (H<sub>1</sub>) is 
-
-#### Confidence level and alpha value:
-- I established a 95% confidence level
-- alpha = 1 - confidence, therefore alpha is 0.05
-
-#### Results:
-
-
-#### Summary:
-
-
-### Stats Test 2: T-Test: One Sample, Two Tailed
-- A T-test allows me to compare a categorical and a continuous variable by comparing the mean of the continuous variable by subgroups based on the categorical variable
-- The t-test returns the t-statistic and the p-value:
-    - t-statistic: 
-        - Is the ratio of the departure of the estimated value of a parameter from its hypothesized value to its standard error. It is used in hypothesis testing via Student's t-test. 
-        - It is used in a t-test to determine if you should support or reject the null hypothesis
-        - t-statistic of 0 = H<sub>0</sub>
-    -  - the p-value:
-        - The probability of obtaining test results at least as extreme as the results actually observed, under the assumption that the null hypothesis is correct
-- We wanted to compare the individual clusters to the total population. 
-    - Cluster1 to the mean of ALL clusters
-    - Cluster2 to the mean of ALL clusters, etc.
-
-#### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is 
-- The alternate hypothesis (H<sub>1</sub>) is 
-
-#### Confidence level and alpha value:
-- I established a 95% confidence level
-- alpha = 1 - confidence, therefore alpha is 0.05
-
-
-#### Results:
-
-
-#### Summary:
-
-***
-
-## <a name="model"></a>Modeling:
-[[Back to top](#top)]
-
-### Model Preparation:
-
-### Baseline
-    
-- Baseline Results: 
-    
-
-- Selected features to input into models:
-    - features = []
-
-***
-
-### Models and R<sup>2</sup> Values:
-- Will run the following regression models:
-
-    
-
-- Other indicators of model performance with breif defiition and why it's important:
-
-    
-    
-#### Model 1: Linear Regression (OLS)
-
-
-- Model 1 results:
-
-
-
-### Model 2 : Lasso Lars Model
-
-
-- Model 2 results:
-
-
-### Model 3 : Tweedie Regressor (GLM)
-
-- Model 3 results:
-
-
-### Model 4: Quadratic Regression Model
-
-- Model 4 results:
-
-
-## Selecting the Best Model:
-
-### Use Table below as a template for all Modeling results for easy comparison:
-
-| Model | Validation/Out of Sample RMSE | R<sup>2</sup> Value |
-| ---- | ----| ---- |
-| Baseline | 0.167366 | 2.2204 x 10<sup>-16</sup> |
-| Linear Regression (OLS) | 0.166731 | 2.1433 x 10<sup>-3</sup> |  
-| Tweedie Regressor (GLM) | 0.155186 | 9.4673 x 10<sup>-4</sup>|  
-| Lasso Lars | 0.166731 | 2.2204 x 10<sup>-16</sup> |  
-| Quadratic Regression | 0.027786 | 2.4659 x 10<sup>-3</sup> |  
-
-
-- {} model performed the best
-
-
-## Testing the Model
-
-- Model Testing Results
-
-***
-
-## <a name="conclusion"></a>Conclusion:
-[[Back to top](#top)]
 
